@@ -143,8 +143,8 @@ export function BlackHole({ body, size }: { body: Body; size: number }) {
     uBH: { value: new THREE.Vector3() },
     uTime: { value: 0 },
     uHorizon: { value: size },
-    uDiskIn: { value: size * 1.6 },
-    uDiskOut: { value: size * 7.0 },
+    uDiskIn: { value: size * 1.8 },
+    uDiskOut: { value: size * 3.6 },
   }), [size]);
 
   useFrame((_, dt) => {

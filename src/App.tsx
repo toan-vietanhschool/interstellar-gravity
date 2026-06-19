@@ -34,7 +34,7 @@ export function App() {
   const far = Math.max(4000, scen.cameraDistance * 30);
   // Hố đen: khung gần-edge-on để thấy vầng halo trên/dưới; còn lại nhìn chếch.
   const camPos: [number, number, number] = scen.blackHole
-    ? [0, scen.cameraDistance * 0.2, scen.cameraDistance * 0.98]
+    ? [0, scen.cameraDistance * 0.13, scen.cameraDistance * 0.99]
     : [scen.cameraDistance * 0.7, scen.cameraDistance * 0.5, scen.cameraDistance * 0.7];
 
   const onConserve = useCallback((c: Conservation) => setCons(c), []);
