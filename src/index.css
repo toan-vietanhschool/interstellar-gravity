@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #03040a;
+  --panel: rgba(12, 14, 24, 0.66);
+  --panel-border: rgba(140, 160, 255, 0.16);
+  --text: #eaf0ff;
+  --muted: #93a0c4;
+  --accent: #ffb347;   /* cam như đĩa bồi tụ */
+  --accent-2: #6fb7ff; /* xanh lam */
+  --good: #4ade80;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body, #root { width: 100%; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app { position: relative; width: 100vw; height: 100vh; }
+canvas { display: block; }
+
+/* ---------- Lớp phủ UI ---------- */
+.overlay {
+  position: absolute; inset: 0; z-index: 10;
+  pointer-events: none;
+  padding: 20px;
+}
+.overlay > * { pointer-events: auto; }
+
+.glass {
+  background: var(--panel);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Tiêu đề */
+.title {
+  position: absolute; top: 20px; left: 20px;
+}
+.title h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+.title h1 span {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.title p { font-size: 0.82rem; color: var(--muted); }
+
+/* Bảng điều khiển trái */
+.panel {
+  position: absolute; top: 84px; left: 20px;
+  width: 290px; max-height: calc(100vh - 110px); overflow-y: auto;
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.panel h2 {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.btn {
+  font-family: var(--sans); font-size: 0.85rem; color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border); border-radius: 10px;
+  padding: 8px 12px; cursor: pointer; transition: all 0.15s ease;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.active { border-color: var(--accent); color: #04111a; background: var(--accent); font-weight: 600; }
+.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #04111a; font-weight: 600; border: none; }
+
+.scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+label.toggle {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.85rem; color: var(--text); cursor: pointer; padding: 3px 0;
+}
+label.toggle input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+.slider { display: flex; flex-direction: column; gap: 4px; }
+.slider .lab { font-size: 0.78rem; color: var(--muted); display: flex; justify-content: space-between; }
+input[type='range'] { width: 100%; accent-color: var(--accent); }
+
+/* Bảng bảo toàn (phải) */
+.conserve {
+  position: absolute; top: 20px; right: 20px;
+  width: 230px; padding: 16px;
+}
+.stat { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+.stat .k { font-size: 0.78rem; color: var(--muted); }
+.stat .v { font-family: var(--mono); font-size: 0.9rem; }
+.stat .v.warn { color: var(--accent); }
+
+/* Soi vật thể (phải dưới) */
+.inspector {
+  position: absolute; bottom: 20px; right: 20px;
+  width: 230px; padding: 16px;
+}
+.inspector h3 { font-size: 1rem; margin-bottom: 8px; }
+
+/* Hướng dẫn / chú thích dưới trái */
+.legend {
+  position: absolute; bottom: 20px; left: 20px;
+  padding: 12px 16px; font-size: 0.78rem; color: var(--muted); max-width: 290px;
+}
+.legend b { color: var(--text); }
+
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  background: rgba(255, 179, 71, 0.15); color: var(--accent);
+  font-size: 0.7rem; font-weight: 600; margin-bottom: 6px;
+}
+
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px; }
+
+@media (max-width: 760px) {
+  .conserve, .inspector, .legend { display: none; }
+  .panel { width: 220px; }
+}
