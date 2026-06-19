@@ -27,14 +27,14 @@ uniform float uTime;
 void main() {
   float r = length(vLocal.xy);
   float t = clamp((r - uInner) / (uOuter - uInner), 0.0, 1.0);
-  float edge = smoothstep(0.0, 0.05, t) * (1.0 - smoothstep(0.72, 1.0, t));
-  vec3 hot = vec3(1.0, 0.97, 0.90);
-  vec3 warm = vec3(1.0, 0.74, 0.42);
+  float edge = smoothstep(0.0, 0.04, t) * (1.0 - smoothstep(0.45, 1.0, t));
+  vec3 hot = vec3(1.0, 0.98, 0.94);
+  vec3 warm = vec3(0.85, 0.55, 0.36);     // nâu bụi ở rìa ngoài (vệt dust)
   vec3 col = mix(hot, warm, t);
   float ang = atan(vLocal.y, vLocal.x);
-  float swirl = 0.82 + 0.18 * sin(ang * 3.0 - uTime * 0.8 + r * 0.15);
-  float dop = 1.0 + 0.55 * cos(ang);     // Doppler: bên +x sáng & dày hơn
-  float bright = (2.7 * (1.0 - t) + 0.6) * edge * swirl * dop;
+  float swirl = 0.8 + 0.2 * sin(ang * 4.0 - uTime * 0.7 + r * 0.18);
+  float dop = 1.0 + 0.22 * cos(ang);     // Doppler nhẹ (gần đối xứng)
+  float bright = (3.0 * (1.0 - t) + 0.45) * edge * swirl * dop;
   gl_FragColor = vec4(col * bright, 1.0);
 }`;
 
@@ -54,13 +54,13 @@ uniform float uOuter;
 void main() {
   float r = length(vLocal.xy);
   float t = clamp((r - uInner) / (uOuter - uInner), 0.0, 1.0);
-  float glow = pow(1.0 - t, 2.2);              // sáng sát mép cầu, nhạt dần ra
-  float innerFade = smoothstep(0.0, 0.06, t);  // mềm ở mép trong (vành photon)
+  float glow = pow(1.0 - t, 1.5);              // dải sáng DÀY, vắt trên/dưới cầu
+  float innerFade = smoothstep(0.0, 0.05, t);  // mềm ở mép trong (vành photon)
   float ang = atan(vLocal.y, vLocal.x);
-  float dop = 1.0 + 0.45 * cos(ang);     // Doppler: sáng hơn một bên
+  float dop = 1.0 + 0.2 * cos(ang);            // Doppler nhẹ
   float a = glow * innerFade * dop;
-  vec3 col = vec3(1.0, 0.95, 0.86);
-  gl_FragColor = vec4(col * a * 1.9, 1.0);
+  vec3 col = vec3(1.0, 0.97, 0.92);
+  gl_FragColor = vec4(col * a * 2.6, 1.0);
 }`;
 
 export function BlackHole({ body, size }: { body: Body; size: number }) {
@@ -70,13 +70,13 @@ export function BlackHole({ body, size }: { body: Body; size: number }) {
 
   const diskUniforms = useMemo(() => ({
     uInner: { value: size * 1.25 },
-    uOuter: { value: size * 3.1 },
+    uOuter: { value: size * 4.6 },
     uTime: { value: 0 },
   }), [size]);
 
   const haloUniforms = useMemo(() => ({
     uInner: { value: size * 1.0 },
-    uOuter: { value: size * 2.7 },
+    uOuter: { value: size * 3.0 },
   }), [size]);
 
   useFrame((_, dt) => {
@@ -95,7 +95,7 @@ export function BlackHole({ body, size }: { body: Body; size: number }) {
 
       {/* Vầng halo (thấu kính + vành photon) — billboard quanh cầu */}
       <mesh ref={haloRef} renderOrder={2}>
-        <ringGeometry args={[size * 1.0, size * 2.7, 160]} />
+        <ringGeometry args={[size * 1.0, size * 3.0, 160]} />
         <shaderMaterial
           args={[{ uniforms: haloUniforms, vertexShader: HALO_VERT, fragmentShader: HALO_FRAG, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }]}
         />
@@ -103,7 +103,7 @@ export function BlackHole({ body, size }: { body: Body; size: number }) {
 
       {/* Đĩa bồi tụ — mặt phẳng xích đạo (nằm ngang) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
-        <ringGeometry args={[size * 1.25, size * 3.1, 200]} />
+        <ringGeometry args={[size * 1.25, size * 4.6, 200]} />
         <shaderMaterial
           args={[{ uniforms: diskUniforms, vertexShader: DISK_VERT, fragmentShader: DISK_FRAG, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }]}
         />
