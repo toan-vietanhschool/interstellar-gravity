@@ -31,7 +31,11 @@ export function App() {
   const scen = getScenario(scenarioName);
   const followId = follow ? selectedId : null;
   const near = Math.max(0.01, scen.cameraDistance * 0.01);
-  const far = Math.max(2000, scen.cameraDistance * 30);
+  const far = Math.max(4000, scen.cameraDistance * 30);
+  // Hố đen: khung gần-edge-on để thấy vầng halo trên/dưới; còn lại nhìn chếch.
+  const camPos: [number, number, number] = scen.blackHole
+    ? [0, scen.cameraDistance * 0.2, scen.cameraDistance * 0.98]
+    : [scen.cameraDistance * 0.7, scen.cameraDistance * 0.5, scen.cameraDistance * 0.7];
 
   const onConserve = useCallback((c: Conservation) => setCons(c), []);
   const onSel = useCallback((s: SelInfo | null) => setSel(s), []);
@@ -46,7 +50,7 @@ export function App() {
         <PerspectiveCamera
           key={scenarioName}
           makeDefault
-          position={[scen.cameraDistance * 0.7, scen.cameraDistance * 0.5, scen.cameraDistance * 0.7]}
+          position={camPos}
           fov={55} near={near} far={far}
         />
         <OrbitControls

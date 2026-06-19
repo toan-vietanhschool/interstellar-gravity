@@ -64,7 +64,7 @@ export const SCENARIOS: Scenario[] = [
     name: 'interstellar',
     label: 'Interstellar (Gargantua)',
     desc: 'Hố đen siêu khối lượng với thấu kính hấp dẫn + đĩa bồi tụ. Hành tinh của Miller quay quanh.',
-    G: 1, soft: 2.0, dt: 0.01, speed: 1, cameraDistance: 280, blackHole: true, bhRadius: 7,
+    G: 1, soft: 2.0, dt: 0.01, speed: 1, cameraDistance: 120, blackHole: true, bhRadius: 7,
     build: () => {
       const M = 1_000_000;
       const out: BodySpec[] = [
