@@ -34,7 +34,7 @@ export function App() {
   const far = Math.max(4000, scen.cameraDistance * 30);
   // Hố đen: khung gần-edge-on để thấy vầng halo trên/dưới; còn lại nhìn chếch.
   const camPos: [number, number, number] = scen.blackHole
-    ? [0, scen.cameraDistance * 0.13, scen.cameraDistance * 0.99]
+    ? [0, scen.cameraDistance * 0.2, scen.cameraDistance * 0.97]
     : [scen.cameraDistance * 0.7, scen.cameraDistance * 0.5, scen.cameraDistance * 0.7];
 
   const onConserve = useCallback((c: Conservation) => setCons(c), []);
@@ -62,9 +62,8 @@ export function App() {
         <color attach="background" args={['#03040a']} />
         <ambientLight intensity={0.35} />
         <pointLight position={[0, 0, 0]} intensity={2.2} distance={0} decay={0} color="#fff2dd" />
-        {!scen.blackHole && (
-          <Stars radius={scen.cameraDistance * 3} depth={scen.cameraDistance} count={2500} factor={4} fade speed={0.4} />
-        )}
+        <Stars radius={scen.cameraDistance * 3} depth={scen.cameraDistance} count={2500} factor={4} fade speed={0.4} />
+
         <Scene
           scenarioName={scenarioName} resetKey={resetKey}
           paused={paused} speed={speed}
